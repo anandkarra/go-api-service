@@ -1,7 +1,7 @@
 # Risks API Service
 
 ## Overview
-This Go-based Risk management application uses the Gin web framework to provide REST endpoints for creating and retrieving risks.
+This Go-based Risk management application uses the Gin web framework to provide REST API endpoints for creating and retrieving risks.
 
 ## Prerequisites
 - Go 1.23 or higher
