@@ -4,7 +4,7 @@
 This Go-based Risk management application uses the Gin web framework to provide REST endpoints for creating and retrieving risks.
 
 ## Prerequisites
-- Go 1.21 or higher
+- Go 1.23 or higher
 
 ## Installation and Startup
 - Clone the repository
