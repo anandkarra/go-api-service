@@ -7,7 +7,7 @@ import (
     "github.com/stretchr/testify/assert"
 )
 
-func TestRiskValidation(t *testing.T) {
+func TestValidate(t *testing.T) {
     testCases := []struct {
         name        string
         risk        *Risk
@@ -23,6 +23,28 @@ func TestRiskValidation(t *testing.T) {
                 Description: "Valid Description",
             },
             expectedErr: false,
+        },
+		{
+            name: "Invalid UUID",
+            risk: &Risk{
+                ID:          uuid.UUID{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+                State:       "open",
+                Title:       "Valid Risk Title",
+                Description: "Valid Description",
+            },
+            expectedErr: false,
+			errMessage: "invalid UUID format",
+        },
+		{
+            name: "Empty State",
+            risk: &Risk{
+                ID:          uuid.New(),
+                State:       "",
+                Title:       "Valid Risk Title",
+                Description: "Valid Description",
+            },
+            expectedErr: true,
+            errMessage:  "state is required",
         },
         {
             name: "Invalid State",
@@ -67,6 +89,17 @@ func TestRiskValidation(t *testing.T) {
             },
             expectedErr: true,
             errMessage:  "title can only contain alphanumeric characters, ., -, and _",
+        },
+		{
+            name: "Empty Description",
+            risk: &Risk{
+                ID:          uuid.New(),
+                State:       "open",
+                Title:       "Valid Risk Title",
+                Description: "",
+            },
+            expectedErr: true,
+            errMessage:  "description is required",
         },
         {
             name: "Description Too Long",
