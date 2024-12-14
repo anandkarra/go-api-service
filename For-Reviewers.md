@@ -12,7 +12,7 @@
   - Query parameters: None
   - Request body: Title (string), description (string), state (string; one of: open, closed, accepted, investigating)
   - Response codes:
-    - 200: Successfully created Risk entry
+    - 201: Successfully created Risk entry
     - 400: Invalid input
     - 500: Internal server error
 - Get endpoint
