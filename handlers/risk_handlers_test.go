@@ -24,7 +24,6 @@ func TestCreateRisk(t *testing.T) {
         risk        *models.Risk
         expectedErr bool
         expectedRespCode int
-        errMessage  string
     }{
         {
             name: "Success",
@@ -74,6 +73,64 @@ func TestCreateRisk(t *testing.T) {
 				assert.Equal(t, tc.risk.Title, risk.Title)
 				assert.Equal(t, tc.risk.Description, risk.Description)
 			}			
+		})
+	}
+}
+
+func TestGetRiskByID(t *testing.T) {
+	apiSvc := NewAPIService()
+	router := gin.Default()
+	router.GET("/risks/:id", apiSvc.GetRiskByID)
+	
+	// Create a valid risk item
+	id := uuid.New()
+	apiSvc.risks[id] = &models.Risk{
+		ID:          id,
+		State:       "open",
+		Title:       "Valid Risk Title",
+		Description: "Valid Description",
+	}
+
+	testCases := []struct {
+        name             string
+        id               string
+        expectedErr      bool
+        expectedRespCode int
+        errMessage       string
+    }{
+        {
+            name: "Success",
+            id: id.String(),
+            expectedErr: false,
+			expectedRespCode: http.StatusOK,
+        },
+		{
+            name: "Invalid UUID",
+			id:          "invalid-uuid",
+			expectedErr: true,
+			expectedRespCode: http.StatusBadRequest,
+		},
+		{
+            name: "Risk Not Found",
+			id:          uuid.New().String(),
+			expectedErr: true,
+			expectedRespCode: http.StatusNotFound,
+		},
+	}
+	for _, tc := range testCases {
+        t.Run(tc.name, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, "/risks/"+tc.id, nil)
+			resp := httptest.NewRecorder()
+
+			router.ServeHTTP(resp, req)
+
+			assert.Equal(t, tc.expectedRespCode, resp.Code)
+
+			if !tc.expectedErr {
+				var risk models.Risk
+				assert.NoError(t, json.Unmarshal(resp.Body.Bytes(), &risk))
+				assert.Equal(t, id, risk.ID)
+			}
 		})
 	}
 }
