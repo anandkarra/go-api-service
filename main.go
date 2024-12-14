@@ -1,10 +1,20 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	
 	"github.com/gin-gonic/gin"
     "github.com/google/uuid"
 )
+
+// ValidRiskStates defines allowed values for a risk state
+var ValidRiskStates = map[string]bool{
+    "open":          true,
+    "closed":        true,
+    "accepted":      true,
+    "investigating": true,
+}
 
 // Risk defines a risk item
 type Risk struct {
@@ -12,6 +22,21 @@ type Risk struct {
     State       string    `json:"state"`
     Title       string    `json:"title"`
     Description string    `json:"description"`
+}
+
+// NewRisk creates a new risk item
+func NewRisk(state, title, description string) (*Risk, error) {
+    // Validate state
+    if !ValidRiskStates[state] {
+        return nil, fmt.Errorf("invalid risk state: %s", state)
+    }
+
+    return &Risk{
+        ID:          uuid.New(),
+        State:       state,
+        Title:       title,
+        Description: description,
+    }, nil
 }
 
 // APIService stores risks in-memory
