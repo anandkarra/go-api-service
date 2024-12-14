@@ -134,3 +134,37 @@ func TestGetRiskByID(t *testing.T) {
 		})
 	}
 }
+
+func TestGetRisks(t *testing.T) {
+	apiSvc := NewAPIService()
+	router := gin.Default()
+	router.GET("/risks", apiSvc.GetRisks)
+
+	// Create risk items
+	id1 := uuid.New()
+	id2 := uuid.New()
+	apiSvc.risks[id1] = &models.Risk{
+		ID:          id1,
+		State:       "open",
+		Title:       "Valid Risk Title",
+		Description: "Valid Risk Description",
+	}
+	apiSvc.risks[id2] = &models.Risk{
+		ID:          id2,
+		State:       "closed",
+		Title:       "Another Valid Risk Title",
+		Description: "Another Valid Risk Description",
+	}
+
+	t.Run("Success", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/risks", nil)
+		resp := httptest.NewRecorder()
+
+		router.ServeHTTP(resp, req)
+
+		assert.Equal(t, http.StatusOK, resp.Code)
+		var risks []models.Risk
+		assert.NoError(t, json.Unmarshal(resp.Body.Bytes(), &risks))
+		assert.Len(t, risks, 2)
+	})
+}
