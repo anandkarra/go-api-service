@@ -9,7 +9,7 @@ usage() {
 # Build Docker image
 build() {
     echo "Building Docker image for Risk API Service..."
-    docker build -t risk-app .
+    docker build -t risk-api-service .
 }
 
 # Run Docker container

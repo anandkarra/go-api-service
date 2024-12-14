@@ -1,5 +1,5 @@
 # Use the official Golang image as the base image
-FROM golang:1.22-alpine AS builder
+FROM golang:1.23.4-alpine AS builder
 
 # Setup the working directory in the container
 WORKDIR /app
@@ -8,7 +8,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -o go-api-service cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o risk-api-service main.go
 
 # Use a slim alpine image for the final container
 FROM alpine:latest
@@ -17,10 +17,10 @@ FROM alpine:latest
 WORKDIR /root/
 
 # Copy the pre-built binary
-COPY --from=builder /app/go-api-service .
+COPY --from=builder /app/risk-api-service .
 
 # Expose the port 8080
 EXPOSE 8080
 
 # Run the executable
-ENTRYPOINT ["./go-api-service"]
+ENTRYPOINT ["./risk-api-service"]
