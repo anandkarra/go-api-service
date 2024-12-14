@@ -14,14 +14,14 @@ This Go-based Risk management application uses the Gin web framework to provide 
 ## Endpoints
 ### Create a Risk
 
-```json
+```sh
 $ curl -X POST http://localhost:8080/v1/risks \
   -H "Content-Type: application/json" \
   -d '{"state":"<open|closed|accepted|investigating>","title":"<title>","description":"<description>"}'
 ```
 
 Example:
-```json
+```sh
 $ curl -X POST http://localhost:8080/v1/risks \
   -H "Content-Type: application/json" \
   -d '{"state":"open","title":"Privilage escalation","description":"Potential privilage escalation vulnerability"}'
@@ -33,7 +33,7 @@ $ curl -X POST http://localhost:8080/v1/risks \
 `$ curl http://localhost:8080/v1/risks/<uuid>`
 
 Example:
-```json
+```sh
 $ curl http://localhost:8080/v1/risks/c61ff24a-e33a-485e-8e83-60a1d0a42906
 {"id":"c61ff24a-e33a-485e-8e83-60a1d0a42906","state":"open","title":"Privilage escalation","description":"Potential privilage escalation vulnerability"}
 ```
@@ -43,7 +43,42 @@ $ curl http://localhost:8080/v1/risks/c61ff24a-e33a-485e-8e83-60a1d0a42906
 `$ curl http://localhost:8080/v1/risks`
 
 Example:
-```json
+```sh
 $ curl http://localhost:8080/v1/risks
 [{"id":"c61ff24a-e33a-485e-8e83-60a1d0a42906","state":"open","title":"Privilage escalation","description":"Potential privilage escalation vulnerability"}]
+```
+
+## Docker Deployment
+
+## Prerequisites
+- Docker
+- Docker Compose
+
+## Build and Run through build script
+
+```sh
+# Make the build script executable
+chmod +x build-script.sh
+
+# Build the Docker image
+./build-script.sh build
+
+# Run the application
+./build-script.sh run
+
+# Stop the application
+./build-script.sh stop
+
+# Clean up all resources
+./build-script.sh clean
+```
+
+## Direct Docker build and run
+
+```sh
+# Build the image
+docker build -t go-api-service .
+
+# Run the container
+docker run -p 8080:8080 go-api-service
 ```
