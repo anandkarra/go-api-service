@@ -26,7 +26,7 @@ func (apiSvc *APIService) CreateRisk(c *gin.Context) {
 	// Type-cast into Risk type
     newRiskItem, err := models.NewRisk(newRisk.State, newRisk.Title, newRisk.Description)
     if err != nil { // Failed to type-cast
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
 
