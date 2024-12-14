@@ -1,55 +1,24 @@
 package main
 
 import (
-	"fmt"
 	"log"
-
 	"net/http"
+
+	"go-api-service/models"
 	
 	"github.com/gin-gonic/gin"
     "github.com/google/uuid"
 )
 
-// ValidRiskStates defines allowed values for a risk state
-var ValidRiskStates = map[string]bool{
-    "open":          true,
-    "closed":        true,
-    "accepted":      true,
-    "investigating": true,
-}
-
-// Risk defines a risk item
-type Risk struct {
-    ID          uuid.UUID `json:"id"`
-    State       string    `json:"state"`
-    Title       string    `json:"title"`
-    Description string    `json:"description"`
-}
-
-// NewRisk creates a new risk item
-func NewRisk(state, title, description string) (*Risk, error) {
-    // Validate state
-    if !ValidRiskStates[state] {
-        return nil, fmt.Errorf("invalid risk state: %s", state)
-    }
-
-    return &Risk{
-        ID:          uuid.New(),
-        State:       state,
-        Title:       title,
-        Description: description,
-    }, nil
-}
-
 // APIService stores risks in-memory
 type APIService struct {
-    risks map[uuid.UUID]*Risk
+    risks map[uuid.UUID]*models.Risk
 }
 
 // NewAPIService creates a new APIService
 func NewAPIService() *APIService {
 	return &APIService{
-		risks: make(map[uuid.UUID]*Risk),
+		risks: make(map[uuid.UUID]*models.Risk),
 	}
 }
 
@@ -58,7 +27,7 @@ func (apiSvc *APIService) CreateRisk(c *gin.Context) {
     var newRisk struct {
         State       string `json:"state" binding:"required"`
         Title       string `json:"title" binding:"required"`
-        Description string `json:"description"`
+        Description string `json:"description" binding:"required"`
     }
 
 	// Parse JSON request body
@@ -68,7 +37,7 @@ func (apiSvc *APIService) CreateRisk(c *gin.Context) {
     }
 
 	// Type-cast into Risk type
-    newRiskItem, err := NewRisk(newRisk.State, newRisk.Title, newRisk.Description)
+    newRiskItem, err := models.NewRisk(newRisk.State, newRisk.Title, newRisk.Description)
     if err != nil { // Failed to type-cast
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
@@ -103,7 +72,7 @@ func (apiSvc *APIService) GetRiskByID(c *gin.Context) {
 // GetRisks lists all risks
 func (apiSvc *APIService) GetRisks(c *gin.Context) {
 	// Parse risk items from memory into slice of Risk type
-    risks := make([]*Risk, 0, len(apiSvc.risks))
+    risks := make([]*models.Risk, 0, len(apiSvc.risks))
     for _, risk := range apiSvc.risks {
         risks = append(risks, risk)
     }
