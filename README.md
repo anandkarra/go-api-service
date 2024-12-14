@@ -88,3 +88,11 @@ docker run -p 8080:8080 go-api-service
 - Run tests: `go test ./...`
 - Get test coverage: `go test ./... -cover`
 - Generate coverage profile and view it in a web browser: `go test ./... -coverprofile=coverage.out && go tool cover -html=coverage.out -o coverage.html`
+
+Current test coverage:
+```sh
+$ go test ./... -cover
+        go-api-service          coverage: 0.0% of statements
+ok      go-api-service/handlers 0.007s  coverage: 100.0% of statements
+ok      go-api-service/models   (cached)        coverage: 96.6% of statements
+```
