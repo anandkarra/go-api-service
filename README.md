@@ -16,16 +16,15 @@ This Go-based Risk management application uses the Gin web framework to provide 
 
 ```json
 $ curl -X POST http://localhost:8080/v1/risks \
-    -H "Content-Type: application/json" \
-    -d '{"state":"<open|closed|accepted|investigating>","title":"<title>","description":"<description>"}'
+  -H "Content-Type: application/json" \
+  -d '{"state":"<open|closed|accepted|investigating>","title":"<title>","description":"<description>"}'
 ```
 
 Example:
 ```json
 $ curl -X POST http://localhost:8080/v1/risks \
-    -H "Content-Type: application/json" \
-    -d '{"state":"open","title":"Privilage escalation","description":"Potential privilage escalation vulnerability"}'
-
+  -H "Content-Type: application/json" \
+  -d '{"state":"open","title":"Privilage escalation","description":"Potential privilage escalation vulnerability"}'
 {"id":"c61ff24a-e33a-485e-8e83-60a1d0a42906","state":"open","title":"Privilage escalation","description":"Potential privilage escalation vulnerability"}
 ```
 
@@ -45,6 +44,6 @@ $ curl http://localhost:8080/v1/risks/c61ff24a-e33a-485e-8e83-60a1d0a42906
 
 Example:
 ```json
-$ curl http://localhost:8080/v1/risks                         
+$ curl http://localhost:8080/v1/risks
 [{"id":"c61ff24a-e33a-485e-8e83-60a1d0a42906","state":"open","title":"Privilage escalation","description":"Potential privilage escalation vulnerability"}]
 ```
